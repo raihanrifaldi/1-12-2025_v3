@@ -81,6 +81,7 @@ body {
   color: #e5e7eb;
   padding: 20px 16px;
   display: flex;
+  height: 100vh;
   flex-direction: column;
 }
 
