@@ -119,28 +119,13 @@ function parseCsv(text) {
   return { data, headers };
 }
 
-// Fungsi untuk mengkonversi Excel serial date menjadi format tanggal yang dapat dibaca
-function convertExcelDate(serial) {
-  // Excel menyimpan tanggal sebagai serial number (days since 1900-01-01)
-  if (typeof serial !== "number" || serial < 1) return serial;
-
-  // Excel epoch: 1 January 1900 (dengan bug leap year)
-  const excelEpoch = new Date(1900, 0, 1);
-  const days = serial - 2; // Adjustment for Excel's leap year bug
-  const date = new Date(excelEpoch.getTime() + days * 24 * 60 * 60 * 1000);
-
-  // Format: M/D/YYYY
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const year = date.getFullYear();
-
-  return `${month}/${day}/${year}`;
-}
-
 // Parser BARU untuk XLSX (Biner) - Membutuhkan SheetJS Library
 function parseXlsx(data) {
-  // Membaca file biner
-  const workbook = XLSX.read(data, { type: "binary" });
+  // Membaca file biner dengan opsi parsing tanggal yang proper
+  const workbook = XLSX.read(data, {
+    type: "binary",
+    cellDates: true, // Parse Excel dates menjadi JavaScript Date objects
+  });
 
   // Target sheet: "Dbase"
   const sheetNameExact = "Sheet1";
@@ -171,35 +156,18 @@ function parseXlsx(data) {
 
   const worksheet = workbook.Sheets[sheetToUse];
 
-  // Konversi sheet menjadi array of objects (JSON)
-  const dataJson = XLSX.utils.sheet_to_json(worksheet);
+  // Konversi sheet menjadi array of objects (JSON) dengan parsing tanggal yang proper
+  const dataJson = XLSX.utils.sheet_to_json(worksheet, {
+    raw: false, // Gunakan formatted values, bukan raw numbers
+    dateNF: "yyyy-mm-dd", // Format tanggal default
+  });
 
   if (dataJson.length === 0) return { data: [], headers: [] };
 
   // Ambil header dari key object pertama
   const headers = Object.keys(dataJson[0]);
 
-  // Konversi Excel serial dates menjadi format tanggal yang dapat dibaca
-  const processedData = dataJson.map((row) => {
-    const processedRow = {};
-    for (const [key, value] of Object.entries(row)) {
-      // Check if value is a number that could be an Excel date (typical range: 1-60000)
-      if (typeof value === "number" && value > 1 && value < 60000 && Number.isInteger(value)) {
-        // Check if column name suggests it's a date field
-        const keyLower = key.toLowerCase();
-        if (keyLower.includes("tanggal") || keyLower.includes("date") || keyLower.includes("tgl")) {
-          processedRow[key] = convertExcelDate(value);
-        } else {
-          processedRow[key] = value;
-        }
-      } else {
-        processedRow[key] = value;
-      }
-    }
-    return processedRow;
-  });
-
-  return { data: processedData, headers };
+  return { data: dataJson, headers };
 }
 
 // === 3. RENDER TABEL (GENERIC / REUSABLE) ===
