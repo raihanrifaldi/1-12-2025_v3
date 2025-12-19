@@ -1,0 +1,663 @@
+/* style.css */
+
+/* ========== GLOBAL ========== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* ========== LOGIN PAGE ========== */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 320px;
+}
+
+.login-container input {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.login-container button {
+  padding: 10px;
+  width: 100%;
+  background-color: #111827;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.login-container button:hover {
+  background-color: #030712;
+}
+
+.icon {
+  width: 60px;
+  margin-bottom: 16px;
+}
+
+#error-msg {
+  color: #dc2626;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+/* ========== DASHBOARD LAYOUT ========== */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #111827;
+  color: #e5e7eb;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background-color: #1f2937;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.sidebar-role {
+  font-weight: 600;
+}
+
+.sidebar-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 10px;
+}
+
+.menu-item {
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.menu-item:hover {
+  background-color: #1f2937;
+}
+
+.menu-item.active {
+  background-color: #f97316;
+  color: #111827;
+}
+
+/* Main area */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top navbar */
+.top-nav {
+  height: 60px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: white;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-box {
+  flex: 1;
+  max-width: 360px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-username {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background-color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #e5e7eb;
+}
+
+/* Content wrapper */
+.content {
+  padding: 20px 24px;
+}
+
+/* Views */
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+}
+
+/* Headers & cards */
+.content-header h1 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.subtitle {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  font-size: 14px;
+}
+
+/* Info / status */
+.info-box {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #1d4ed8;
+  margin-bottom: 16px;
+}
+
+.status-text {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+/* Upload card */
+.upload-card {
+  max-width: 420px;
+}
+
+.btn-primary {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background-color: #f97316;
+  color: #111827;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary:hover {
+  background-color: #ea580c;
+}
+
+.hint {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Table */
+.table-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  overflow-x: auto;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.table-wrapper th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  font-size: 12px;
+  color: #4b5563;
+}
+
+.table-wrapper tr:hover td {
+  background-color: #f3f4f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main-area {
+    width: 100%;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}
+
+/* ========== MODERN TABLE STYLES ========== */
+
+.table-wrapper {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  
+  /* Agar tabel bisa di-scroll secara horizontal & vertikal */
+  overflow: auto;
+  
+  /* Batasi tinggi tabel agar header bisa sticky saat data sangat panjang */
+  max-height: 600px; 
+  position: relative;
+}
+
+.table-wrapper table {
+  width: 100%;
+  border-collapse: separate; /* Diperlukan agar border-radius berfungsi */
+  border-spacing: 0;
+  font-size: 14px; /* Ukuran font sedikit diperbesar agar terbaca */
+  min-width: 100%; /* Pastikan tabel mengisi wrapper */
+}
+
+/* Header Tabel */
+.table-wrapper th {
+  background-color: #f3f4f6; /* Warna abu-abu lembut */
+  color: #374151; /* Warna teks gelap */
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase; /* Agar judul kolom tegas */
+  letter-spacing: 0.05em;
+  padding: 14px 16px; /* Padding lebih lega */
+  text-align: left;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap; /* Mencegah judul kolom turun baris */
+  
+  /* Sticky Header: Judul diam saat discroll ke bawah */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Isi Tabel */
+.table-wrapper td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+  vertical-align: middle;
+  white-space: nowrap; /* Agar data rapi satu baris (opsional, hapus jika ingin wrap) */
+}
+
+/* Zebra Striping (Warna selang-seling) */
+.table-wrapper tr:nth-child(even) td {
+  background-color: #f9fafb;
+}
+
+/* Efek Hover Baris */
+.table-wrapper tr:hover td {
+  background-color: #eff6ff; /* Warna biru sangat muda saat disorot */
+  color: #1e40af;
+  cursor: default;
+  transition: background-color 0.2s;
+}
+
+/* Menghapus border bawah pada baris terakhir agar rapi di sudut */
+.table-wrapper tr:last-child td {
+  border-bottom: none;
+}
+
+/* Scrollbar Custom (Opsional: agar scrollbar terlihat lebih tipis/modern) */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 8px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 8px;
+}
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.search-container-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 450px;
+    margin-right: 20px;
+}
+
+/* Styling Box Search (Bentuk Pill/Lonjong) */
+.search-box-styled {
+    display: flex;
+    align-items: center;
+    background-color: #f3f4f6;
+    border-radius: 99px; /* Membuat sudut sangat bulat */
+    padding: 8px 16px;
+    border: 1px solid #e5e7eb;
+    transition: box-shadow 0.2s;
+}
+
+.search-box-styled:focus-within {
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); /* Efek glow oranye saat diketik */
+    border-color: #f97316;
+}
+
+.search-box-styled input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: #374151;
+    padding: 0 8px;
+}
+
+.search-icon {
+    color: #9ca3af;
+}
+
+/* Tombol Panah Kecil untuk Buka Filter */
+.filter-toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 4px;
+    border-radius: 50%;
+    transition: transform 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-toggle-btn:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.filter-toggle-btn.active {
+    transform: rotate(180deg); /* Putar panah ke atas saat aktif */
+}
+
+/* Panel Filter (Dropdown Melayang) */
+.filter-panel {
+    position: absolute;
+    top: 120%; /* Posisi tepat di bawah search bar */
+    left: 0;
+    width: 100%; /* Lebar sama dengan search bar */
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    padding: 16px;
+    z-index: 50; /* Pastikan muncul di atas tabel */
+    max-height: 500px; /* Batasi tinggi panel */
+    display: flex;
+    flex-direction: column;
+    
+    /* Animasi muncul */
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.2s ease-out;
+    visibility: visible;
+}
+
+/* ========== ACCORDION FILTER STYLES ========== */
+
+/* Wrapper per group filter */
+.filter-group-wrapper {
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 0; /* Reset margin lama */
+}
+
+/* Header yang bisa diklik (Tombol Slide) */
+.filter-accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.filter-accordion-header:hover {
+  background-color: #f9fafb;
+}
+
+/* Teks Label */
+.filter-label-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Ikon Panah (Chevron) */
+.filter-icon {
+  font-size: 12px;
+  color: #6b7280;
+  transition: transform 0.3s ease; /* Animasi putar ikon */
+}
+
+/* Rotasi ikon saat aktif */
+.filter-accordion-header.active .filter-icon {
+  transform: rotate(180deg);
+}
+
+/* Konten Checkbox (Area yang di-slide) */
+.filter-accordion-content {
+  max-height: 0; /* Default tertutup */
+  overflow: hidden;
+  transition: max-height 0.3s ease-out; /* Animasi slide halus */
+  padding-left: 6px;
+}
+
+/* Styling tambahan untuk list agar ada jarak saat terbuka */
+.filter-accordion-content .checkbox-list {
+  padding-bottom: 12px;
+  max-height: 200px; /* Scrollbar internal jika listnya sangat panjang */
+  overflow-y: auto;
+}
+
+.all-filters-scroll-area {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px; /* Spasi untuk scrollbar */
+}
+
+/* State Tersembunyi */
+.filter-panel.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.filter-header {
+    font-weight: 600;
+    font-size: 13px;
+    color: #374151;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-label {
+    font-size: 11px;
+    font-weight: 800; /* Lebih tebal */
+    color: #111827;   /* Lebih gelap */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: block;
+    background-color: #f9fafb; /* Sedikit background header */
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+/* Container Checkbox dengan Scroll jika data banyak */
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 150px; /* Batasi tinggi per kolom, bukan total */
+    overflow-y: auto;
+    padding-left: 6px; /* Indentasi dikit */
+}
+
+/* Styling Item Checkbox */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #4b5563;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.checkbox-item:hover {
+    color: #111827;
+}
+
+.checkbox-item input[type="checkbox"] {
+    accent-color: #f97316; /* Warna oranye */
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Scrollbar Custom untuk Filter List */
+.checkbox-list::-webkit-scrollbar {
+    width: 6px;
+}
+.checkbox-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+.checkbox-list::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+.text-muted {
+    font-size: 12px;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* Tambahkan ini di bagian .btn-primary atau di bawahnya */
+
+.btn-danger {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  background-color: #ef4444; /* Merah */
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+/* Sedikit perbaikan agar tombol sejajar */
+.upload-card button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
