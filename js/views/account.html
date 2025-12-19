@@ -1,0 +1,47 @@
+<section id="view-account" class="view">
+  <div class="content-header">
+    <h1>Account & Data Management</h1>
+    <p class="subtitle">Pusat pengelolaan database lokal.</p>
+  </div>
+
+  <div class="card upload-card" style="margin-bottom: 20px">
+    <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px">
+      <i class="fa-solid fa-database"></i> 1. Data Utama (Dashboard)
+    </h3>
+
+    <div class="info-box" style="margin-top: 10px; padding: 8px">
+      Status: <span id="dbStatusText" style="font-weight: bold">Memeriksa...</span>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 15px; align-items: center">
+      <input type="file" id="csvInput" accept=".csv,.xlsx" style="display: none" />
+      <button id="btnUploadCsv" class="btn-primary"><i class="fa-solid fa-upload"></i> Upload CSV/XLSX Utama</button>
+      <button id="btnDeleteDb" class="btn-danger" style="display: none"><i class="fa-solid fa-trash"></i> Hapus</button>
+    </div>
+    <p id="uploadStatus" class="status-text"></p>
+  </div>
+
+  <div class="card upload-card">
+    <h3 style="margin-top: 0; border-bottom: 1px solid #eee; padding-bottom: 10px">
+      <i class="fa-solid fa-clock-rotate-left"></i> 2. Data History Pekerjaan
+    </h3>
+
+    <div
+      class="info-box"
+      style="margin-top: 10px; padding: 8px; background-color: #fff7ed; border-color: #ffedd5; color: #9a3412"
+    >
+      Status: <span id="historyStatusText" style="font-weight: bold">Memeriksa...</span>
+    </div>
+
+    <div style="display: flex; gap: 10px; margin-top: 15px; align-items: center">
+      <input type="file" id="csvHistoryInput" accept=".csv,.xlsx" style="display: none" />
+      <button id="btnUploadHistory" class="btn-primary" style="background-color: #0d9488; color: white">
+        <i class="fa-solid fa-upload"></i> Upload CSV/XLSX History
+      </button>
+      <button id="btnDeleteHistory" class="btn-danger" style="display: none">
+        <i class="fa-solid fa-trash"></i> Hapus
+      </button>
+    </div>
+    <p id="uploadHistoryStatus" class="status-text"></p>
+  </div>
+</section>
