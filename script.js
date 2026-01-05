@@ -7,7 +7,7 @@ function login() {
   // Validasi sederhana
   if (username === "admin" && password === "admin") {
     // Redirect ke dashboard
-    window.location.href = "dashboard.html";
+    window.location.href = "app.html";
   } else {
     // Tampilkan error
     errorMsg.textContent = "Username atau password salah!";

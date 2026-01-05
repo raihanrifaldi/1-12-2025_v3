@@ -182,8 +182,8 @@ export function applySearchAndFilterMain() {
 }
 
 export function applySearchAndFilterHistory() {
-  const input = document.getElementById("globalSearchHistory");
-  const keyword = (input.value || "").toLowerCase();
+  const input = document.getElementById("globalSearch");
+  const keyword = (input && input.value ? input.value : "").toLowerCase();
 
   const filtered = state.historyData.filter((row) => {
     const matchesSearch = Object.values(row).some((val) => String(val).toLowerCase().includes(keyword));

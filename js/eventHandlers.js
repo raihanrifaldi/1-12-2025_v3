@@ -27,11 +27,40 @@ export function initializeApp() {
   // Setup Upload Logic: HISTORY PEKERJAAN
   setupHistoryDataUpload();
 
-  // Setup Search & Filter UI: Data Utama
+  // Setup Search & Filter UI: Data Utama & History (shared search bar)
   setupMainFilters();
-
-  // Setup Search & Filter UI: History Data
-  setupHistoryFilters();
+  setupUnifiedHistorySearch();
+// Setup a unified search bar in topnav that only works for History Pekerjaan view
+function setupUnifiedHistorySearch() {
+  const searchInput = document.getElementById("globalSearch");
+  // Listen to view changes
+  function handleViewChange() {
+    const historyView = document.getElementById("view-history-container");
+    const isHistoryVisible = historyView && historyView.style.display !== "none";
+    if (searchInput) {
+      if (isHistoryVisible) {
+        searchInput.disabled = false;
+        searchInput.placeholder = "Search data history...";
+        searchInput.value = "";
+        searchInput.removeEventListener("input", applySearchAndFilterMain);
+        searchInput.addEventListener("input", applySearchAndFilterHistory);
+      } else {
+        searchInput.value = "";
+        searchInput.placeholder = "";
+        searchInput.disabled = true;
+        searchInput.removeEventListener("input", applySearchAndFilterHistory);
+      }
+    }
+  }
+  // Initial state
+  handleViewChange();
+  // Listen for navigation
+  document.querySelectorAll(".menu-item").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setTimeout(handleViewChange, 100); // Wait for view switch
+    });
+  });
+}
 }
 
 function setupMainDataUpload() {
@@ -109,10 +138,7 @@ function setupMainFilters() {
     }
   });
 
-  const searchInput = document.getElementById("globalSearch");
-  if (searchInput) {
-    searchInput.addEventListener("input", applySearchAndFilterMain);
-  }
+  // Search input now handled by setupUnifiedHistorySearch
 
   const resetBtn = document.getElementById("resetFilters");
   if (resetBtn) {
@@ -149,10 +175,7 @@ function setupHistoryFilters() {
     }
   });
 
-  const searchInputHistory = document.getElementById("globalSearchHistory");
-  if (searchInputHistory) {
-    searchInputHistory.addEventListener("input", applySearchAndFilterHistory);
-  }
+  // Search input now handled by setupUnifiedHistorySearch
 
   const resetBtnHistory = document.getElementById("resetFiltersHistory");
   if (resetBtnHistory) {
