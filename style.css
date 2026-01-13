@@ -7,10 +7,17 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background-color: #f3f4f6;
   color: #111827;
+}
+
+/* Prevent full-page horizontal scrolling; content will handle internal scrolling */
+html,
+body,
+.app-container {
+  height: 100%;
+  overflow-x: hidden;
 }
 
 /* ========== LOGIN PAGE ========== */
@@ -145,10 +152,13 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* internal scrolling handled by .content */
 }
 
 /* Top navbar */
 .top-nav {
+  position: relative;
   height: 60px;
   border-bottom: 1px solid #e5e7eb;
   background-color: white;
@@ -197,6 +207,9 @@ body {
 /* Content wrapper */
 .content {
   padding: 20px 24px;
+  flex: 1;
+  overflow-x: auto; /* horizontal scrolling only inside content area */
+  overflow-y: auto; /* allow vertical scrolling inside content area */
 }
 
 /* Views */
@@ -325,12 +338,12 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
-  
+
   /* Agar tabel bisa di-scroll secara horizontal & vertikal */
   overflow: auto;
-  
+
   /* Batasi tinggi tabel agar header bisa sticky saat data sangat panjang */
-  max-height: 600px; 
+  max-height: 600px;
   position: relative;
 }
 
@@ -354,11 +367,11 @@ body {
   text-align: left;
   border-bottom: 2px solid #e5e7eb;
   white-space: nowrap; /* Mencegah judul kolom turun baris */
-  
+
   /* Sticky Header: Judul diam saat discroll ke bawah */
   position: sticky;
   top: 0;
-  z-index: 10;
+  max-width: 100%; /* Adjusted to ensure it fits properly */
 }
 
 /* Isi Tabel */
@@ -378,6 +391,9 @@ body {
 /* Efek Hover Baris */
 .table-wrapper tr:hover td {
   background-color: #eff6ff; /* Warna biru sangat muda saat disorot */
+  .nav-right {
+    z-index: 60;
+  }
   color: #1e40af;
   cursor: default;
   transition: background-color 0.2s;
@@ -406,87 +422,87 @@ body {
 }
 
 .search-container-wrapper {
-    position: relative;
-    flex: 1;
-    max-width: 450px;
-    margin-right: 20px;
+  position: relative;
+  flex: 1;
+  max-width: 450px;
+  margin-right: 20px;
 }
 
 /* Styling Box Search (Bentuk Pill/Lonjong) */
 .search-box-styled {
-    display: flex;
-    align-items: center;
-    background-color: #f3f4f6;
-    border-radius: 99px; /* Membuat sudut sangat bulat */
-    padding: 8px 16px;
-    border: 1px solid #e5e7eb;
-    transition: box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6;
+  border-radius: 99px; /* Membuat sudut sangat bulat */
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s;
 }
 
 .search-box-styled:focus-within {
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); /* Efek glow oranye saat diketik */
-    border-color: #f97316;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); /* Efek glow oranye saat diketik */
+  border-color: #f97316;
 }
 
 .search-box-styled input {
-    border: none;
-    background: transparent;
-    outline: none;
-    flex: 1;
-    font-size: 14px;
-    color: #374151;
-    padding: 0 8px;
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  color: #374151;
+  padding: 0 8px;
 }
 
 .search-icon {
-    color: #9ca3af;
+  color: #9ca3af;
 }
 
 /* Tombol Panah Kecil untuk Buka Filter */
 .filter-toggle-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #6b7280;
-    padding: 4px;
-    border-radius: 50%;
-    transition: transform 0.2s, background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px;
+  border-radius: 50%;
+  transition: transform 0.2s, background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .filter-toggle-btn:hover {
-    background-color: #e5e7eb;
-    color: #111827;
+  background-color: #e5e7eb;
+  color: #111827;
 }
 
 .filter-toggle-btn.active {
-    transform: rotate(180deg); /* Putar panah ke atas saat aktif */
+  transform: rotate(180deg); /* Putar panah ke atas saat aktif */
 }
 
 /* Panel Filter (Dropdown Melayang) */
 .filter-panel {
-    position: absolute;
-    top: 120%; /* Posisi tepat di bawah search bar */
-    left: 0;
-    width: 100%; /* Lebar sama dengan search bar */
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    padding: 16px;
-    z-index: 50; /* Pastikan muncul di atas tabel */
-    max-height: 500px; /* Batasi tinggi panel */
-    display: flex;
-    flex-direction: column;
-    
-    /* Animasi muncul */
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.2s ease-out;
-    visibility: visible;
+  position: absolute;
+  top: 120%; /* Posisi tepat di bawah search bar */
+  left: 0;
+  width: 100%; /* Lebar sama dengan search bar */
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  z-index: 50; /* Pastikan muncul di atas tabel */
+  max-height: 500px; /* Batasi tinggi panel */
+  display: flex;
+  flex-direction: column;
+
+  /* Animasi muncul */
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.2s ease-out;
+  visibility: visible;
 }
 
 /* ========== ACCORDION FILTER STYLES ========== */
@@ -552,91 +568,105 @@ body {
 }
 
 .all-filters-scroll-area {
-    overflow-y: auto;
-    flex: 1;
-    padding-right: 5px; /* Spasi untuk scrollbar */
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 5px; /* Spasi untuk scrollbar */
 }
+
+/* Batasi tinggi area filter agar tidak memecah layout dan jadikan scrollable */
+.filter-panel .all-filters-scroll-area {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* Reset buttons hidden by default; shown by JS for active view */
+#resetFilters,
+#resetFiltersHistory {
+  display: none;
+}
+
+/* (content styling defined earlier) */
 
 /* State Tersembunyi */
 .filter-panel.hidden {
-    opacity: 0;
-    transform: translateY(-10px);
-    visibility: hidden;
-    pointer-events: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .filter-header {
-    font-weight: 600;
-    font-size: 13px;
-    color: #374151;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #f3f4f6;
-    padding-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .filter-label {
-    font-size: 11px;
-    font-weight: 800; /* Lebih tebal */
-    color: #111827;   /* Lebih gelap */
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    display: block;
-    background-color: #f9fafb; /* Sedikit background header */
-    padding: 4px 6px;
-    border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800; /* Lebih tebal */
+  color: #111827; /* Lebih gelap */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+  background-color: #f9fafb; /* Sedikit background header */
+  padding: 4px 6px;
+  border-radius: 4px;
 }
 
 /* Container Checkbox dengan Scroll jika data banyak */
 .checkbox-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 150px; /* Batasi tinggi per kolom, bukan total */
-    overflow-y: auto;
-    padding-left: 6px; /* Indentasi dikit */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 150px; /* Batasi tinggi per kolom, bukan total */
+  overflow-y: auto;
+  padding-left: 6px; /* Indentasi dikit */
 }
 
 /* Styling Item Checkbox */
 .checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: #4b5563;
-    cursor: pointer;
-    padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 4px 0;
 }
 
 .checkbox-item:hover {
-    color: #111827;
+  color: #111827;
 }
 
 .checkbox-item input[type="checkbox"] {
-    accent-color: #f97316; /* Warna oranye */
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
+  accent-color: #f97316; /* Warna oranye */
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 /* Scrollbar Custom untuk Filter List */
 .checkbox-list::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 .checkbox-list::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 .checkbox-list::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 4px;
+  background: #d1d5db;
+  border-radius: 4px;
 }
 .text-muted {
-    font-size: 12px;
-    color: #9ca3af;
-    font-style: italic;
+  font-size: 12px;
+  color: #9ca3af;
+  font-style: italic;
 }
 
 /* Tambahkan ini di bagian .btn-primary atau di bawahnya */

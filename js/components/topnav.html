@@ -1,5 +1,5 @@
 <header class="top-nav">
-  <div class="search-container-wrapper">
+  <div id="searchContainerWrapper" class="search-container-wrapper">
     <div class="search-box-styled">
       <i class="fa-solid fa-magnifying-glass search-icon"></i>
       <input type="text" id="globalSearch" placeholder="Search data history..." />
@@ -7,22 +7,36 @@
         <i class="fa-solid fa-chevron-down"></i>
       </button>
     </div>
-
     <div id="filterPanel" class="filter-panel hidden">
       <div class="filter-header">
         <div style="flex: 1"><i class="fa-solid fa-filter"></i> Filters</div>
-        <button
-          id="resetFilters"
-          style="font-size: 11px; color: #dc2626; border: none; background: none; cursor: pointer"
-        >
-          Reset All
-        </button>
+        <div style="display: flex; gap: 8px">
+          <button
+            id="resetFilters"
+            style="font-size: 11px; color: #dc2626; border: none; background: none; cursor: pointer"
+          >
+            Reset Main
+          </button>
+          <button
+            id="resetFiltersHistory"
+            style="font-size: 11px; color: #dc2626; border: none; background: none; cursor: pointer"
+          >
+            Reset History
+          </button>
+        </div>
       </div>
-      <div id="allFiltersContainer" class="all-filters-scroll-area">
-        <p class="text-muted" style="padding: 10px">Upload CSV/XLSX Data Utama untuk melihat filter.</p>
+
+      <div id="allFiltersContainerWrapper">
+        <div id="allFiltersContainer" class="all-filters-scroll-area">
+          <p class="text-muted" style="padding: 10px">Upload CSV/XLSX Data Utama untuk melihat filter.</p>
+        </div>
+        <div id="allFiltersContainerHistory" class="all-filters-scroll-area" style="display: none">
+          <p class="text-muted" style="padding: 10px">Upload CSV/XLSX History untuk melihat filter.</p>
+        </div>
       </div>
     </div>
   </div>
+  <div></div>
 
   <div class="nav-right">
     <span class="nav-username">Admin</span>

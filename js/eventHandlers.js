@@ -29,161 +29,188 @@ export function initializeApp() {
 
   // Setup Search & Filter UI: Data Utama & History (shared search bar)
   setupMainFilters();
+  setupHistoryFilters();
   setupUnifiedHistorySearch();
-// Setup a unified search bar in topnav that only works for History Pekerjaan view
-function setupUnifiedHistorySearch() {
-  const searchInput = document.getElementById("globalSearch");
-  // Listen to view changes
-  function handleViewChange() {
-    const historyView = document.getElementById("view-history-container");
-    const isHistoryVisible = historyView && historyView.style.display !== "none";
-    if (searchInput) {
-      if (isHistoryVisible) {
-        searchInput.disabled = false;
-        searchInput.placeholder = "Search data history...";
-        searchInput.value = "";
-        searchInput.removeEventListener("input", applySearchAndFilterMain);
-        searchInput.addEventListener("input", applySearchAndFilterHistory);
-      } else {
-        searchInput.value = "";
-        searchInput.placeholder = "";
-        searchInput.disabled = true;
-        searchInput.removeEventListener("input", applySearchAndFilterHistory);
+
+  // Setup a unified search bar in topnav that routes based on the active view
+  function setupUnifiedHistorySearch() {
+    const searchInput = document.getElementById("globalSearch");
+    if (!searchInput) return;
+
+    const searchWrapper = document.getElementById("searchContainerWrapper");
+    const filterPanel = document.getElementById("filterPanel");
+    const mainFilters = document.getElementById("allFiltersContainer");
+    const historyFilters = document.getElementById("allFiltersContainerHistory");
+
+    function routeSearch() {
+      const activeView = document.querySelector(".view.active");
+      if (!activeView) return;
+      if (activeView.id === "view-history") applySearchAndFilterHistory();
+      else if (activeView.id === "view-dashboard") applySearchAndFilterMain();
+    }
+
+    function updateSearchState() {
+      const activeView = document.querySelector(".view.active");
+      const isHistory = activeView && activeView.id === "view-history";
+      const isDashboard = activeView && activeView.id === "view-dashboard";
+
+      // show/hide whole search box
+      if (searchWrapper) searchWrapper.style.display = isHistory || isDashboard ? "block" : "none";
+
+      // update placeholder
+      if (isHistory) searchInput.placeholder = "Search data history...";
+      else if (isDashboard) searchInput.placeholder = "Search dashboard data...";
+      else searchInput.placeholder = "";
+
+      // when panel is visible, show correct inner filters
+      if (filterPanel && !filterPanel.classList.contains("hidden")) {
+        if (mainFilters) mainFilters.style.display = isDashboard ? "block" : "none";
+        if (historyFilters) historyFilters.style.display = isHistory ? "block" : "none";
       }
+      // show only relevant reset button
+      const resetMainBtn = document.getElementById("resetFilters");
+      const resetHistBtn = document.getElementById("resetFiltersHistory");
+      if (resetMainBtn) resetMainBtn.style.display = isDashboard ? "inline-flex" : "none";
+      if (resetHistBtn) resetHistBtn.style.display = isHistory ? "inline-flex" : "none";
+    }
+
+    // single routed input handler
+    searchInput.removeEventListener("input", routeSearch);
+    searchInput.addEventListener("input", routeSearch);
+
+    // Sync initial state & when view changes
+    updateSearchState();
+    document.querySelectorAll(".menu-item").forEach((btn) => {
+      btn.addEventListener("click", () => setTimeout(updateSearchState, 120));
+    });
+  }
+
+  function setupMainDataUpload() {
+    const btnUploadMain = document.getElementById("btnUploadCsv");
+    const inputCsvMain = document.getElementById("csvInput");
+    const btnDeleteMain = document.getElementById("btnDeleteDb");
+    const statusMain = document.getElementById("uploadStatus");
+
+    if (btnUploadMain && inputCsvMain) {
+      btnUploadMain.addEventListener("click", () => inputCsvMain.click());
+      inputCsvMain.addEventListener("change", () => {
+        processUpload(inputCsvMain, "main", statusMain);
+      });
+    }
+
+    if (btnDeleteMain) {
+      btnDeleteMain.addEventListener("click", () => {
+        if (confirm("Hapus seluruh Data Utama?")) {
+          localStorage.removeItem(DB_KEY_MAIN);
+          state.mainData = [];
+          state.mainHeaders = [];
+          renderGenericTable([], [], "tableWrapper", "csvTableBody", "noDataMessage");
+          generateFilterOptions([]);
+          updateDbStatusUI(false, 0, null, "main");
+          alert("Data Utama dihapus.");
+        }
+      });
     }
   }
-  // Initial state
-  handleViewChange();
-  // Listen for navigation
-  document.querySelectorAll(".menu-item").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      setTimeout(handleViewChange, 100); // Wait for view switch
-    });
-  });
-}
-}
 
-function setupMainDataUpload() {
-  const btnUploadMain = document.getElementById("btnUploadCsv");
-  const inputCsvMain = document.getElementById("csvInput");
-  const btnDeleteMain = document.getElementById("btnDeleteDb");
-  const statusMain = document.getElementById("uploadStatus");
+  function setupHistoryDataUpload() {
+    const btnUploadHist = document.getElementById("btnUploadHistory");
+    const inputCsvHist = document.getElementById("csvHistoryInput");
+    const btnDeleteHist = document.getElementById("btnDeleteHistory");
+    const statusHist = document.getElementById("uploadHistoryStatus");
 
-  if (btnUploadMain && inputCsvMain) {
-    btnUploadMain.addEventListener("click", () => inputCsvMain.click());
-    inputCsvMain.addEventListener("change", () => {
-      processUpload(inputCsvMain, "main", statusMain);
-    });
+    if (btnUploadHist && inputCsvHist) {
+      btnUploadHist.addEventListener("click", () => inputCsvHist.click());
+      inputCsvHist.addEventListener("change", () => {
+        processUpload(inputCsvHist, "history", statusHist);
+      });
+    }
+
+    if (btnDeleteHist) {
+      btnDeleteHist.addEventListener("click", () => {
+        if (confirm("Hapus seluruh Data History?")) {
+          localStorage.removeItem(DB_KEY_HISTORY);
+          state.historyData = [];
+          state.historyHeaders = [];
+          generateFilterOptionsHistory([]);
+          renderGenericTable([], [], "historyTableWrapper", "historyTableBody", "noHistoryMessage");
+          updateDbStatusUI(false, 0, null, "history");
+          alert("Data History dihapus.");
+        }
+      });
+    }
   }
 
-  if (btnDeleteMain) {
-    btnDeleteMain.addEventListener("click", () => {
-      if (confirm("Hapus seluruh Data Utama?")) {
-        localStorage.removeItem(DB_KEY_MAIN);
-        state.mainData = [];
-        state.mainHeaders = [];
-        renderGenericTable([], [], "tableWrapper", "csvTableBody", "noDataMessage");
-        generateFilterOptions([]);
-        updateDbStatusUI(false, 0, null, "main");
-        alert("Data Utama dihapus.");
+  function setupMainFilters() {
+    const toggleBtn = document.getElementById("toggleFilterBtn");
+    const filterPanel = document.getElementById("filterPanel");
+
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        filterPanel.classList.toggle("hidden");
+        toggleBtn.classList.toggle("active");
+        // show correct inner filters when panel toggled
+        const activeView = document.querySelector(".view.active");
+        const mainFilters = document.getElementById("allFiltersContainer");
+        const historyFilters = document.getElementById("allFiltersContainerHistory");
+        if (filterPanel && !filterPanel.classList.contains("hidden")) {
+          if (activeView && activeView.id === "view-history") {
+            if (mainFilters) mainFilters.style.display = "none";
+            if (historyFilters) historyFilters.style.display = "block";
+            const rb = document.getElementById("resetFiltersHistory");
+            const rm = document.getElementById("resetFilters");
+            if (rb) rb.style.display = "inline-flex";
+            if (rm) rm.style.display = "none";
+          } else if (activeView && activeView.id === "view-dashboard") {
+            if (mainFilters) mainFilters.style.display = "block";
+            if (historyFilters) historyFilters.style.display = "none";
+            const rb2 = document.getElementById("resetFiltersHistory");
+            const rm2 = document.getElementById("resetFilters");
+            if (rb2) rb2.style.display = "none";
+            if (rm2) rm2.style.display = "inline-flex";
+          } else {
+            if (mainFilters) mainFilters.style.display = "none";
+            if (historyFilters) historyFilters.style.display = "none";
+            const rb3 = document.getElementById("resetFiltersHistory");
+            const rm3 = document.getElementById("resetFilters");
+            if (rb3) rb3.style.display = "none";
+            if (rm3) rm3.style.display = "none";
+          }
+        }
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (filterPanel && !filterPanel.contains(e.target) && (!toggleBtn || !toggleBtn.contains(e.target))) {
+        filterPanel.classList.add("hidden");
+        toggleBtn.classList.remove("active");
       }
     });
-  }
-}
 
-function setupHistoryDataUpload() {
-  const btnUploadHist = document.getElementById("btnUploadHistory");
-  const inputCsvHist = document.getElementById("csvHistoryInput");
-  const btnDeleteHist = document.getElementById("btnDeleteHistory");
-  const statusHist = document.getElementById("uploadHistoryStatus");
+    // Search input now handled by setupUnifiedHistorySearch
 
-  if (btnUploadHist && inputCsvHist) {
-    btnUploadHist.addEventListener("click", () => inputCsvHist.click());
-    inputCsvHist.addEventListener("change", () => {
-      processUpload(inputCsvHist, "history", statusHist);
-    });
-  }
-
-  if (btnDeleteHist) {
-    btnDeleteHist.addEventListener("click", () => {
-      if (confirm("Hapus seluruh Data History?")) {
-        localStorage.removeItem(DB_KEY_HISTORY);
-        state.historyData = [];
-        state.historyHeaders = [];
-        generateFilterOptionsHistory([]);
-        renderGenericTable([], [], "historyTableWrapper", "historyTableBody", "noHistoryMessage");
-        updateDbStatusUI(false, 0, null, "history");
-        alert("Data History dihapus.");
-      }
-    });
-  }
-}
-
-function setupMainFilters() {
-  const toggleBtn = document.getElementById("toggleFilterBtn");
-  const filterPanel = document.getElementById("filterPanel");
-
-  if (toggleBtn) {
-    toggleBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      filterPanel.classList.toggle("hidden");
-      toggleBtn.classList.toggle("active");
-    });
-  }
-
-  document.addEventListener("click", (e) => {
-    if (filterPanel && !filterPanel.contains(e.target) && !toggleBtn.contains(e.target)) {
-      filterPanel.classList.add("hidden");
-      toggleBtn.classList.remove("active");
+    const resetBtn = document.getElementById("resetFilters");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        const checkboxes = document.querySelectorAll("#allFiltersContainer input[type='checkbox']");
+        checkboxes.forEach((cb) => (cb.checked = false));
+        Object.keys(state.activeFilters).forEach((key) => state.activeFilters[key].clear());
+        applySearchAndFilterMain();
+      });
     }
-  });
-
-  // Search input now handled by setupUnifiedHistorySearch
-
-  const resetBtn = document.getElementById("resetFilters");
-  if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      const checkboxes = document.querySelectorAll("#allFiltersContainer input[type='checkbox']");
-      checkboxes.forEach((cb) => (cb.checked = false));
-      Object.keys(state.activeFilters).forEach((key) => state.activeFilters[key].clear());
-      applySearchAndFilterMain();
-    });
-  }
-}
-
-function setupHistoryFilters() {
-  const toggleBtnHistory = document.getElementById("toggleFilterBtnHistory");
-  const filterPanelHistory = document.getElementById("filterPanelHistory");
-
-  if (toggleBtnHistory) {
-    toggleBtnHistory.addEventListener("click", (e) => {
-      e.stopPropagation();
-      filterPanelHistory.classList.toggle("hidden");
-      toggleBtnHistory.classList.toggle("active");
-    });
   }
 
-  document.addEventListener("click", (e) => {
-    if (
-      filterPanelHistory &&
-      !filterPanelHistory.contains(e.target) &&
-      toggleBtnHistory &&
-      !toggleBtnHistory.contains(e.target)
-    ) {
-      filterPanelHistory.classList.add("hidden");
-      toggleBtnHistory.classList.remove("active");
+  function setupHistoryFilters() {
+    // History uses the same toggle/filter panel in topnav; only wire the reset behavior here.
+    const resetBtnHistory = document.getElementById("resetFiltersHistory");
+    if (resetBtnHistory) {
+      resetBtnHistory.addEventListener("click", () => {
+        const checkboxes = document.querySelectorAll("#allFiltersContainerHistory input[type='checkbox']");
+        checkboxes.forEach((cb) => (cb.checked = false));
+        Object.keys(state.activeFiltersHistory || {}).forEach((key) => state.activeFiltersHistory[key].clear());
+        applySearchAndFilterHistory();
+      });
     }
-  });
-
-  // Search input now handled by setupUnifiedHistorySearch
-
-  const resetBtnHistory = document.getElementById("resetFiltersHistory");
-  if (resetBtnHistory) {
-    resetBtnHistory.addEventListener("click", () => {
-      const checkboxes = document.querySelectorAll("#allFiltersContainerHistory input[type='checkbox']");
-      checkboxes.forEach((cb) => (cb.checked = false));
-      Object.keys(state.activeFiltersHistory).forEach((key) => state.activeFiltersHistory[key].clear());
-      applySearchAndFilterHistory();
-    });
   }
 }
