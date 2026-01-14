@@ -202,14 +202,11 @@ export function initializeApp() {
   }
 
   function setupHistoryFilters() {
-    // History uses the same toggle/filter panel in topnav; only wire the reset behavior here.
+    // Nonaktifkan reset filter history (tidak melakukan apa-apa)
     const resetBtnHistory = document.getElementById("resetFiltersHistory");
     if (resetBtnHistory) {
       resetBtnHistory.addEventListener("click", () => {
-        const checkboxes = document.querySelectorAll("#allFiltersContainerHistory input[type='checkbox']");
-        checkboxes.forEach((cb) => (cb.checked = false));
-        Object.keys(state.activeFiltersHistory || {}).forEach((key) => state.activeFiltersHistory[key].clear());
-        applySearchAndFilterHistory();
+        // Tidak ada filter yang perlu direset
       });
     }
   }

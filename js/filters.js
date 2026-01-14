@@ -82,6 +82,7 @@ export function generateFilterOptions(data) {
 }
 
 export function generateFilterOptionsHistory(data) {
+  // Hanya aktifkan filter untuk kolom nama (NAMA/NAME)
   const container = document.getElementById("allFiltersContainerHistory");
   if (!container) return;
 
@@ -94,68 +95,66 @@ export function generateFilterOptionsHistory(data) {
     return;
   }
 
-  const excludedColumns = ["ID", "NO", "NAME", "NAMA", "TANGGAL LAHIR"];
+  // Cari kolom nama (NAMA/NAME)
+  const namaCol = state.historyHeaders.find(
+    (col) => col.toUpperCase().includes("NAMA") || col.toUpperCase().includes("NAME")
+  );
+  if (!namaCol) return;
 
-  state.historyHeaders.forEach((colName, index) => {
-    if (excludedColumns.some((ex) => colName.toUpperCase().includes(ex))) return;
+  state.activeFiltersHistory[namaCol] = new Set();
 
-    state.activeFiltersHistory[colName] = new Set();
+  const groupDiv = document.createElement("div");
+  groupDiv.className = "filter-group-wrapper";
 
-    const groupDiv = document.createElement("div");
-    groupDiv.className = "filter-group-wrapper";
+  const headerBtn = document.createElement("button");
+  headerBtn.className = "filter-accordion-header active";
+  headerBtn.innerHTML = `<span class="filter-label-text">${namaCol}</span> <i class="fa-solid fa-chevron-down filter-icon"></i>`;
 
-    const headerBtn = document.createElement("button");
-    headerBtn.className = "filter-accordion-header";
-    if (index === 0) headerBtn.classList.add("active");
+  const contentDiv = document.createElement("div");
+  contentDiv.className = "filter-accordion-content";
+  contentDiv.style.maxHeight = "500px";
 
-    headerBtn.innerHTML = `<span class="filter-label-text">${colName}</span> <i class="fa-solid fa-chevron-down filter-icon"></i>`;
+  const checkboxList = document.createElement("div");
+  checkboxList.className = "checkbox-list";
 
-    const contentDiv = document.createElement("div");
-    contentDiv.className = "filter-accordion-content";
-    if (index === 0) contentDiv.style.maxHeight = "500px";
+  const uniqueValues = [...new Set(data.map((item) => item[namaCol]))]
+    .filter((val) => val !== "" && val !== undefined)
+    .sort();
 
-    const checkboxList = document.createElement("div");
-    checkboxList.className = "checkbox-list";
+  uniqueValues.forEach((value) => {
+    const div = document.createElement("div");
+    div.className = "checkbox-item";
 
-    const uniqueValues = [...new Set(data.map((item) => item[colName]))]
-      .filter((val) => val !== "" && val !== undefined)
-      .sort();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = value;
+    const safeId = `filter-history-${namaCol}-${value}`.replace(/[^a-zA-Z0-9-_]/g, "");
+    checkbox.id = safeId;
 
-    uniqueValues.forEach((value) => {
-      const div = document.createElement("div");
-      div.className = "checkbox-item";
-
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = value;
-      const safeId = `filter-history-${colName}-${value}`.replace(/[^a-zA-Z0-9-_]/g, "");
-      checkbox.id = safeId;
-
-      checkbox.addEventListener("change", (e) => {
-        if (e.target.checked) state.activeFiltersHistory[colName].add(value);
-        else state.activeFiltersHistory[colName].delete(value);
-        applySearchAndFilterHistory();
-      });
-
-      const lbl = document.createElement("label");
-      lbl.setAttribute("for", safeId);
-      lbl.textContent = value;
-
-      div.appendChild(checkbox);
-      div.appendChild(lbl);
-      checkboxList.appendChild(div);
+    checkbox.addEventListener("change", (e) => {
+      if (e.target.checked) state.activeFiltersHistory[namaCol].add(value);
+      else state.activeFiltersHistory[namaCol].delete(value);
+      applySearchAndFilterHistory();
     });
 
-    contentDiv.appendChild(checkboxList);
-    groupDiv.appendChild(headerBtn);
-    groupDiv.appendChild(contentDiv);
-    container.appendChild(groupDiv);
+    const lbl = document.createElement("label");
+    lbl.setAttribute("for", safeId);
+    lbl.textContent = value;
 
-    headerBtn.addEventListener("click", () => {
-      headerBtn.classList.toggle("active");
-      if (contentDiv.style.maxHeight) contentDiv.style.maxHeight = null;
-      else contentDiv.style.maxHeight = contentDiv.scrollHeight + "px";
-    });
+    div.appendChild(checkbox);
+    div.appendChild(lbl);
+    checkboxList.appendChild(div);
+  });
+
+  contentDiv.appendChild(checkboxList);
+  groupDiv.appendChild(headerBtn);
+  groupDiv.appendChild(contentDiv);
+  container.appendChild(groupDiv);
+
+  headerBtn.addEventListener("click", () => {
+    headerBtn.classList.toggle("active");
+    if (contentDiv.style.maxHeight) contentDiv.style.maxHeight = null;
+    else contentDiv.style.maxHeight = contentDiv.scrollHeight + "px";
   });
 }
 
@@ -182,23 +181,24 @@ export function applySearchAndFilterMain() {
 }
 
 export function applySearchAndFilterHistory() {
+  // Search + filter hanya kolom nama
   const input = document.getElementById("globalSearch");
   const keyword = (input && input.value ? input.value : "").toLowerCase();
 
+  // Cari kolom nama (NAMA/NAME)
+  const namaCol = state.historyHeaders.find(
+    (col) => col.toUpperCase().includes("NAMA") || col.toUpperCase().includes("NAME")
+  );
+
   const filtered = state.historyData.filter((row) => {
     const matchesSearch = Object.values(row).some((val) => String(val).toLowerCase().includes(keyword));
-
     let matchesFilter = true;
-    for (const [colName, selectedSet] of Object.entries(state.activeFiltersHistory)) {
-      if (selectedSet.size > 0) {
-        if (!selectedSet.has(row[colName])) {
-          matchesFilter = false;
-          break;
-        }
+    if (namaCol && state.activeFiltersHistory[namaCol] && state.activeFiltersHistory[namaCol].size > 0) {
+      if (!state.activeFiltersHistory[namaCol].has(row[namaCol])) {
+        matchesFilter = false;
       }
     }
     return matchesSearch && matchesFilter;
   });
-
   renderGenericTable(filtered, state.historyHeaders, "historyTableWrapper", "historyTableBody", "noHistoryMessage");
 }
